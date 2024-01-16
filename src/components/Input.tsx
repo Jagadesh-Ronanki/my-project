@@ -1,19 +1,19 @@
-"use client"
-import React, { useState, ChangeEvent, useRef, useEffect } from 'react';
-import Badge from './Badge';
-import DropDownMenu from './DropDownMenu';
-import { faker } from '@faker-js/faker';
+"use client";
+import React, { useState, ChangeEvent, useRef, useEffect } from "react";
+import Badge from "./Badge";
+import DropDownMenu from "./DropDownMenu";
+import { faker } from "@faker-js/faker";
 
 interface Item {
-    label: string;
-    image: string;
-    value: string;
+  label: string;
+  image: string;
+  value: string;
 }
 
 export interface ListItem {
-    label: string;
-    value: string;
-    image: string;
+  label: string;
+  value: string;
+  image: string;
 }
 
 const Input: React.FC = () => {
@@ -21,32 +21,83 @@ const Input: React.FC = () => {
 
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
 
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>("");
   const [selectedItems, setSelectedItems] = useState<Item[]>([]);
   const [allItems, setAllItems] = useState<ListItem[]>([
-      { label: 'Marina Augustine', value: 'marina@example.com', image: faker.image.avatar() },
-      { label: 'Nick Giannopoulos', value: 'nick@example.com', image: faker.image.avatar() },
-      { label: 'Gavruv Sen', value: 'savruv@example.com', image: faker.image.avatar() },
-      { label: 'Hemosho Hidaka', value: 'hemosho@example.com', image: faker.image.avatar() },
-      { label: 'Priyanka Prathap', value: 'priyanka@example.com', image: faker.image.avatar() },
-      { label: 'Kamesopa Dichik', value: 'kamesopa@example.com', image: faker.image.avatar() },
-      { label: 'Arupva Hameka', value: 'arupva@example.com', image: faker.image.avatar() },
-      { label: 'Sim sammug', value: 'sim@example.com', image: faker.image.avatar() },
+    {
+      label: "Marina Augustine",
+      value: "marina@example.com",
+      image: faker.image.avatar(),
+    },
+    {
+      label: "Nick Giannopoulos",
+      value: "nick@example.com",
+      image: faker.image.avatar(),
+    },
+    {
+      label: "Gavruv Sen",
+      value: "savruv@example.com",
+      image: faker.image.avatar(),
+    },
+    {
+      label: "Hemosho Hidaka",
+      value: "hemosho@example.com",
+      image: faker.image.avatar(),
+    },
+    {
+      label: "Priyanka Prathap",
+      value: "priyanka@example.com",
+      image: faker.image.avatar(),
+    },
+    {
+      label: "Kamesopa Dichik",
+      value: "kamesopa@example.com",
+      image: faker.image.avatar(),
+    },
+    {
+      label: "Arupva Hameka",
+      value: "arupva@example.com",
+      image: faker.image.avatar(),
+    },
+    {
+      label: faker.person.firstName(),
+      value: faker.internet.email(),
+      image: faker.image.avatar(),
+    },
+    {
+      label: faker.internet.userName(),
+      value: faker.internet.email(),
+      image: faker.image.avatar(),
+    },
+    {
+      label: faker.internet.userName(),
+      value: faker.internet.email(),
+      image: faker.image.avatar(),
+    },
+    {
+      label: faker.internet.userName(),
+      value: faker.internet.email(),
+      image: faker.image.avatar(),
+    },
+    {
+      label: "Sim sammug",
+      value: "sim@example.com",
+      image: faker.image.avatar(),
+    },
   ]);
   const [dropdownItems, setDropdownItems] = useState<ListItem[]>(allItems);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-
-  const handleArrowKey = (direction: 'up' | 'down'): void => {
+  const handleArrowKey = (direction: "up" | "down"): void => {
     const maxIndex = dropdownItems.length - 1;
     let newIndex: number;
 
     if (hoveredIndex === null) {
-      newIndex = direction === 'down' ? 0 : maxIndex;
+      newIndex = direction === "down" ? 0 : maxIndex;
     } else {
       newIndex =
-        direction === 'down'
+        direction === "down"
           ? Math.min(maxIndex, hoveredIndex + 1)
           : Math.max(0, hoveredIndex - 1);
     }
@@ -54,91 +105,92 @@ const Input: React.FC = () => {
     setHoveredIndex(newIndex);
   };
 
-
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
     setInputValue(value);
 
     // Filter unselected dropdown items based on input value
-    const filteredItems = allItems.filter(item =>
-        !selectedItems.some(selectedItem => selectedItem.label === item.label) &&
-        (item.label.toLowerCase().includes(value.toLowerCase()) || item.value.toLowerCase().includes(value.toLowerCase()))
+    const filteredItems = allItems.filter(
+      (item) =>
+        !selectedItems.some(
+          (selectedItem) => selectedItem.label === item.label
+        ) &&
+        (item.label.toLowerCase().includes(value.toLowerCase()) ||
+          item.value.toLowerCase().includes(value.toLowerCase()))
     );
 
     setDropdownItems(filteredItems);
   };
 
   const handleItemClick = (item: ListItem): void => {
-      // Remove selected item from dropdown items
-      setDropdownItems((prevItems) => prevItems.filter((dropdownItem) => dropdownItem.label !== item.label));
+    setDropdownItems((prevItems) =>
+      prevItems.filter((dropdownItem) => dropdownItem.label !== item.label)
+    );
 
-      // Add selected item to the selected items
-      setSelectedItems([...selectedItems, { label: item.label, image: item.image, value: item.value }]);
-      setInputValue('');
-      setIsDropdownOpen(false);
+    setSelectedItems([
+      ...selectedItems,
+      { label: item.label, image: item.image, value: item.value },
+    ]);
+    setInputValue("");
+    
 
-      if (selectedItems.length === 0) {
-        setHighlightedIndex(null);
-      }
+    if (selectedItems.length === 0) {
+      setHighlightedIndex(null);
+    }
   };
 
   const handleRemoveItem = (index: number): void => {
-      const removedItem = selectedItems[index];
+    const removedItem = selectedItems[index];
 
-      // Remove item from selected items
-      const updatedItems = [...selectedItems];
-      updatedItems.splice(index, 1);
-      setSelectedItems(updatedItems);
+    const updatedItems = [...selectedItems];
+    updatedItems.splice(index, 1);
+    setSelectedItems(updatedItems);
 
-      // Add removed item back to dropdown items
-      if(removedItem){
-        setDropdownItems((prevItems) => [...prevItems, { label: removedItem?.label, value: removedItem?.value, image: removedItem?.image }]);
-      }
+    if (removedItem) {
+      setDropdownItems((prevItems) => [
+        ...prevItems,
+        {
+          label: removedItem?.label,
+          value: removedItem?.value,
+          image: removedItem?.image,
+        },
+      ]);
+    }
   };
 
   const handleDropdownItemClick = (item: ListItem): void => {
-      handleItemClick(item);
+    handleItemClick(item);
   };
 
   const handleEnterKey = (): void => {
     if (dropdownItems.length > 0) {
-        handleItemClick(dropdownItems[hoveredIndex !== null ? hoveredIndex : 0]);
+      handleItemClick(dropdownItems[hoveredIndex !== null ? hoveredIndex : 0]);
     }
   };
 
   const handleBackspace = (): void => {
     // If the input is empty and there are selected items, highlight and remove the last item
-    if (inputValue === '' && selectedItems.length > 0) {
+    if (inputValue === "" && selectedItems.length > 0) {
       const lastIndex = selectedItems.length - 1;
       setHighlightedIndex(lastIndex);
     }
-    if(inputValue  === '' && selectedItems.length > 0 && highlightedIndex !== null) {
+    if (
+      inputValue === "" &&
+      selectedItems.length > 0 &&
+      highlightedIndex !== null
+    ) {
       handleRemoveItem(highlightedIndex!);
     }
 
-    if(selectedItems.length === 0) {
+    if (selectedItems.length === 0) {
       setHighlightedIndex(null);
     }
   };
 
-  const handleClickOutside = (event: MouseEvent): void => {
-    if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-      setIsDropdownOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-
   return (
     <div className="relative flex flex-row w-screen border-b-4 border-blue-400 pb-5">
       {selectedItems.length > 0 && (
-        <div className='flex flex-row'>
+        <div className="flex flex-row">
           <div className="grid grid-cols-3 gap-2 mb-4">
             {selectedItems.map((item, index) => (
               <Badge
@@ -149,7 +201,7 @@ const Input: React.FC = () => {
                 onRemove={() => handleRemoveItem(index)}
               />
             ))}
-            <div className='self-center'>
+            <div className="self-center">
               <input
                 type="text"
                 id="new-user"
@@ -159,12 +211,12 @@ const Input: React.FC = () => {
                 placeholder="Add new user"
                 onFocus={() => setIsDropdownOpen(true)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     handleEnterKey();
-                  } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                  } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
                     e.preventDefault();
-                    handleArrowKey(e.key === 'ArrowDown' ? 'down' : 'up');
-                  } else if (e.key === 'Backspace') {
+                    handleArrowKey(e.key === "ArrowDown" ? "down" : "up");
+                  } else if (e.key === "Backspace") {
                     handleBackspace();
                   }
                 }}
@@ -189,12 +241,12 @@ const Input: React.FC = () => {
             value={inputValue}
             onChange={handleInputChange}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 handleEnterKey();
-              } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+              } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
                 e.preventDefault();
-                handleArrowKey(e.key === 'ArrowDown' ? 'down' : 'up');
-              } else if (e.key === 'Backspace') {
+                handleArrowKey(e.key === "ArrowDown" ? "down" : "up");
+              } else if (e.key === "Backspace") {
                 handleBackspace();
               }
             }}
@@ -214,7 +266,6 @@ const Input: React.FC = () => {
       )}
     </div>
   );
-  
 };
 
 export default Input;
